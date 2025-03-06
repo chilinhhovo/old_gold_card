@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bank heist</title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+
+
+  <!-- Google fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+  <style>
+    
+    body {
+      margin: 0;
+      font-size: 20px;
+      font-family: 'Helvetica-Neue', sans-serif;
+      text-rendering: optimizeLegibility;
+      cursor: none;
+      background-color: white;
+    }
+
+    body {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" fill="white" stroke="%23000000" width="20px" height="20px" viewBox="0 0 10.04 10.04"><circle cx="5.02" cy="5.02" r="4.52"/></svg>') 10 10, auto;
+      height: 100vh;
+    }
+
+    a {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%23000000" fill="white" width="20px" height="20px" viewBox="0 0 10.04 10.04"><circle cx="5.02" cy="5.02" r="4.52"/></svg>') 10 10, auto;
+    }
+
+    .with-image-bg,
+    .with-video-bg {
+            position: relative;
+            background-size: cover;
+        }
+
+    .content {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .header {
+    position: relative;
+    min-height: 100vh;  
+    display: flex;
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center;
+    text-align: center;
+    overflow: visible; 
+    padding: 2rem 1rem;
+    }
+
+    .header img {
+      width: 100%;
+      height: auto; 
+      display: block;
+      object-fit: contain; 
+    }
+
+    .full-width-wrapper {
+    background-color: white;
+    width: 100%;
+}
+
+    h1{
+      color: white;
+      font-family: 'HelveticaNeue-Bold', sans-serif;
+      font-weight: bold;
+      font-size: 2.7em;
+      line-height: 1.2;
+      padding-bottom: 1px;
+      font-size: 40px;
+    }
+    h3{ color: black;
+      font-family: 'HelveticaNeue-Regular', sans-serif;
+      font-weight: bold;
+      font-size: 2.7em;
+      line-height: 1.2;
+      font-size: 80px;
+      text-align: center;
+    }
+    a {
+      color: #00f5cc;
+    }
+
+    .footer {
+      background: black;
+      text-align: center;
+      font-size: 0.8em;
+      margin-top: 4em;
+      padding: 4em 0;
+    }
+
+    figure {
+      margin: 0;
+      padding-bottom: 1.2em;
+    }
+
+    figcaption {
+      font-size: 0.8em;
+      text-align: center;
+      margin-top: 0.5em;
+      color: #666;
+    }
+
+    h2 {
+      color: white;
+      font-family: 'HelveticaNeue-Bold', sans-serif;
+
+    }
+
+
+    h4 {
+      font-family: 'HelveticaNeue', serif;
+      text-align: center;
+      font-size: 20px;
+      color: black;
+    }
+
+    iframe,
+    img,
+    video {
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    p {
+      line-height: 1.6;
+      margin: 0;
+      padding-bottom: 1.2em;
+      color: black
+    }
+
+    .date{
+      text-align: center;
+    }
+    
+    .in_box {
+      color: black;
+      font-family: 'Helvetica-Neue';
+      font-weight: bold;
+    }
+    .byline{
+      text-align: center;
+    }
+
+    .in_box_text{
+      color: black;
+      font-family: 'Helvetica-Neue', sans-serif;;
+    }
+
+    ul {
+      margin: 0;
+      padding-bottom: 1em;
+      line-height: 1.6;
+    }
+    .date{
+      color: white
+    }
+
+    iframe {
+      padding-bottom: 1.2em;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      background: #fff880;
+    }
+
+    .full-width figure {
+        text-align: center;
+    }
+
+    .video-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1; 
+    }
+
+    .video-background video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; 
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1; 
+      padding: 1.2em;
+      color:black;
+    }
+
+    .header h1,
+    .header .subhead {
+      position: relative;
+      z-index: 1;
+    }
+
+    .sub_continents {
+      width:80%
+    }
+
+    /* margin on mobile */
+    @media (max-width: 640px) {
+      body {
+        font-size: 18px;
+      }
+
+      .sticky-thing img {
+        display: block;
+        width: 100%;
+        height: auto;
+        }
+
+
+      .content {
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        padding-bottom: 0.5em;
+      }
+      
+      .green-text {
+            color: #49F6C3;
+        
+        }
+
+        
+      }
+  </style>
+  <link href="scrolly-styles.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://unpkg.com/intersection-observer@0.5.1/intersection-observer.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/scrollama/3.2.0/scrollama.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/scrolly-video@latest/dist/scrolly-video.js"></script>
+</head>
+
+<body>
+
+  <!-- This section remains in full-width-wrapper with black background -->
+<div class="full-width-wrapper">
+  <div class="content">
+      <p class="date">Feb 2025</p>
+      <!-- The rest of the content is now outside, on a white background -->
+<div ckass="'content"> 
+  <!-- Generated by ai2html v0.121.1 - 2025-02-26 19:42 -->
+  <!-- ai file: gold_card_one.ai -->
+  <style media="screen,print">
+    #g-gold_card_one-box ,
+    #g-gold_card_one-box .g-artboard {
+      margin:0 auto;
+    }
+    #g-gold_card_one-box p {
+      margin:0;
+    }
+    #g-gold_card_one-box .g-aiAbs {
+      position:absolute;
+    }
+    #g-gold_card_one-box .g-aiImg {
+      position:absolute;
+      top:0;
+      display:block;
+      width:100% !important;
+    }
+    #g-gold_card_one-box .g-aiSymbol {
+      position: absolute;
+      box-sizing: border-box;
+    }
+    #g-gold_card_one-box .g-aiPointText p { white-space: nowrap; }
+    #g-gold_card_one-Artboard_1 {
+      position:relative;
+      overflow:hidden;
+    }
+  
+    @media (min-width: 600px) {
+    #g-Priceflation-Mobile {
+      display: none;
+    }
+  }
+  
+  @media (max-width: 799px) {
+    #g-Priceflation-Desktop {
+      display: none;
+    }
+  }
+  
+  
+  </style>
+  
+  <div id="g-gold_card_one-box" class="ai2html">
+  
+    <!-- Artboard: Artboard_1 -->
+    <div id="g-gold_card_one-Artboard_1" class="g-artboard" style="max-width: 1366px;max-height: 768px" data-aspect-ratio="1.779" data-min-width="0">
+  <div style="padding: 0 0 56.2225% 0;"></div>
+      <img id="g-gold_card_one-Artboard_1-img" class="g-gold_card_one-Artboard_1-img g-aiImg" alt="" src="gold_card_one-Artboard_1.jpg"/>
+    </div>
+  
+  </div>
+  
+  <!-- End ai2html - 2025-02-26 19:42 -->
+  
+      </div>
+      <h3>Gold Trump card</h3>
+      <h3>The new green card for the wealthy</h3>
+      <h4>Trump introduces 'gold card' visa to boost wealthy investors with a $5 million price tag.</h4>
+      <h4>But what does $5 million mean to an American?</h4>
+      <div class="byline">
+          <p>Artworks and words by <a href="https://chilinhhovo.github.io/portfolio/">Chi Vo</a></p>
+      </div>
+  </div>
+</div>
+
+<div> </div>
+    <div class="content">
+        <p>On February 25th, Trump unveiled the 'Gold Card' visa, a new initiative aimed at attracting wealthy investors with a $5 million price tag. This "golden visa" is set to replace the existing green card system in an effort to stimulate the U.S. economy. </p>
+
+        <p>Trump told reporters he will replace the "EB-5" immigrant investor visa program, which allows foreign investors of large sums of money that create or preserve U.S. jobs to become permanent residents, with a so-called "gold card."</p>
+          
+        <p>"We're going to be putting a price on that card of about $5 million, and that's going to give you green card privileges, plus," the president added.</p>
+         <p>"You have a green card. This is a gold card," President Trump said in the Oval Office on Tuesday. "We’re going to be putting a price on that card of about $5 million, and that’s going to give you green card privileges, plus it’s going to be a route to citizenship."</p> 
+    </div>
+
+  
+  
+<div class="content"> 
+
+<!-- Generated by ai2html v0.121.1 - 2025-03-05 05:59 -->
+<!-- ai file: Priceflation.ai -->
+<style media="screen,print">
+	#g-Priceflation-box ,
+	#g-Priceflation-box .g-artboard {
+		margin:0 auto;
+	}
+	#g-Priceflation-box p {
+		margin:0;
+	}
+	#g-Priceflation-box .g-aiAbs {
+		position:absolute;
+	}
+	#g-Priceflation-box .g-aiImg {
+		position:absolute;
+		top:0;
+		display:block;
+		width:100% !important;
+	}
+	#g-Priceflation-box .g-aiSymbol {
+		position: absolute;
+		box-sizing: border-box;
+	}
+	#g-Priceflation-box .g-aiPointText p { white-space: nowrap; }
+	#g-Priceflation-Desktop {
+		position:relative;
+		overflow:hidden;
+	}
+	#g-Priceflation-Desktop p {
+		font-family:AdobeHandwriting-Tiffany;
+		font-weight:regular;
+		line-height:43px;
+		opacity:1;
+		letter-spacing:0em;
+		font-size:36px;
+		text-align:left;
+		color:rgb(0,0,0);
+		text-transform:none;
+		padding-bottom:0;
+		padding-top:0;
+		mix-blend-mode:normal;
+		font-style:normal;
+		height:auto;
+		position:static;
+	}
+	#g-Priceflation-Desktop .g-pstyle0 {
+		font-weight:400;
+		text-align:center;
+	}
+	#g-Priceflation-Desktop .g-pstyle1 {
+		font-weight:400;
+	}
+	#g-Priceflation-Mobile {
+		position:relative;
+		overflow:hidden;
+	}
+	#g-Priceflation-Mobile p {
+		font-family:AdobeHandwriting-Tiffany;
+		font-weight:regular;
+		line-height:27px;
+		opacity:1;
+		letter-spacing:0em;
+		font-size:23px;
+		text-align:left;
+		color:rgb(0,0,0);
+		text-transform:none;
+		padding-bottom:0;
+		padding-top:0;
+		mix-blend-mode:normal;
+		font-style:normal;
+		height:auto;
+		position:static;
+	}
+	#g-Priceflation-Mobile .g-pstyle0 {
+		font-weight:400;
+		text-align:center;
+	}
+	#g-Priceflation-Mobile .g-pstyle1 {
+		font-weight:400;
+	}
+
+</style>
+
+<div id="g-Priceflation-box" class="ai2html">
+
+	<!-- Artboard: Desktop -->
+	<div id="g-Priceflation-Desktop" class="g-artboard" style="width:800px; height:5029px;" data-aspect-ratio="0.159" data-min-width="800">
+<div style=""></div>
+		<img id="g-Priceflation-Desktop-img" class="g-Priceflation-Desktop-img g-aiImg" alt="" src="Priceflation-Desktop.jpg"/>
+		<div id="g-ai0-1" class="g-Layer_1 g-aiAbs" style="top:1.2925%;left:74.1814%;margin-left:-19.3125%;width:38.625%;">
+			<p class="g-pstyle0">Proposed gold card </p>
+		</div>
+		<div id="g-ai0-2" class="g-Layer_1 g-aiAbs" style="top:1.3124%;left:28.851%;margin-left:-15.0625%;width:30.125%;">
+			<p class="g-pstyle0">Green card</p>
+		</div>
+		<div id="g-ai0-3" class="g-Layer_1 g-aiAbs" style="top:7.4766%;left:28.8397%;margin-left:-15.0625%;width:30.125%;">
+			<p class="g-pstyle0">Price in 2017 </p>
+		</div>
+		<div id="g-ai0-4" class="g-Layer_1 g-aiAbs" style="top:7.4766%;left:61.5211%;width:30.125%;">
+			<p class="g-pstyle1">Price in 2025 </p>
+		</div>
+		<div id="g-ai0-5" class="g-Layer_1 g-aiAbs" style="top:9.306%;left:28.8397%;margin-left:-15.0625%;width:30.125%;">
+			<p class="g-pstyle0">$500,000</p>
+		</div>
+		<div id="g-ai0-6" class="g-Layer_1 g-aiAbs" style="top:9.306%;left:74.2086%;margin-left:-15.0625%;width:30.125%;">
+			<p class="g-pstyle0">$5 million</p>
+		</div>
+		<div id="g-ai0-7" class="g-Layer_1 g-aiAbs" style="top:12.7262%;left:53.0625%;margin-left:-32.25%;width:64.5%;">
+			<p class="g-pstyle0">what you can with that money everyday for a year in America? </p>
+		</div>
+		<div id="g-ai0-8" class="g-Layer_1 g-aiAbs" style="top:16.5242%;left:53.0625%;margin-left:-32.25%;width:64.5%;">
+			<p class="g-pstyle0">that&rsquo;s 365 days of</p>
+		</div>
+		<div id="g-ai0-9" class="g-Layer_1 g-aiAbs" style="top:26.7051%;left:72.9582%;margin-left:-13.9375%;width:27.875%;">
+			<p class="g-pstyle0">39,160 eggs </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai0-10" class="g-Layer_1 g-aiAbs" style="top:26.7648%;left:26.9848%;margin-left:-13.9375%;width:27.875%;">
+			<p class="g-pstyle0">11,182 eggs </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai0-11" class="g-Layer_1 g-aiAbs" style="top:38.1189%;left:23.9848%;margin-left:-13.9375%;width:27.875%;">
+			<p class="g-pstyle0">392 packages of cookies </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai0-12" class="g-Layer_1 g-aiAbs" style="top:38.1189%;left:69.9848%;margin-left:-13.9375%;width:27.875%;">
+			<p class="g-pstyle0">2,871 packages of cookies </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai0-13" class="g-Layer_1 g-aiAbs" style="top:50.6463%;left:25.4611%;margin-left:-17.6875%;width:35.375%;">
+			<p class="g-pstyle0">258 McDonald&rsquo;s</p>
+			<p class="g-pstyle0">BigMacs </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai0-14" class="g-Layer_1 g-aiAbs" style="top:50.6463%;left:71.4611%;margin-left:-17.625%;width:35.25%;">
+			<p class="g-pstyle0">2365 McDonald&rsquo;s</p>
+			<p class="g-pstyle0">BigMacs </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai0-15" class="g-Layer_1 g-aiAbs" style="top:56.2338%;left:49.0625%;margin-left:-32.25%;width:64.5%;">
+			<p class="g-pstyle0">How about luxury goods...?</p>
+		</div>
+		<div id="g-ai0-16" class="g-Layer_1 g-aiAbs" style="top:58.9978%;left:51.3125%;margin-left:-32.25%;width:64.5%;">
+			<p class="g-pstyle0">what you can with that amount in a year in America? </p>
+		</div>
+		<div id="g-ai0-17" class="g-Layer_1 g-aiAbs" style="top:69.1788%;left:23.535%;margin-left:-16%;width:32%;">
+			<p class="g-pstyle0">53  Hermes Birkin bags</p>
+		</div>
+		<div id="g-ai0-18" class="g-Layer_1 g-aiAbs" style="top:69.1986%;left:72.0861%;margin-left:-17.75%;width:35.5%;">
+			<p class="g-pstyle0">versus 413 Hermes Birkin bags  </p>
+		</div>
+		<div id="g-ai0-19" class="g-Layer_1 g-aiAbs" style="top:79.4393%;left:25.1486%;margin-left:-19.25%;width:38.5%;">
+			<p class="g-pstyle0">1/3 of a condo in Beverley Hills</p>
+		</div>
+		<div id="g-ai0-20" class="g-Layer_1 g-aiAbs" style="top:79.4393%;left:72.4611%;margin-left:-20.6875%;width:41.375%;">
+			<p class="g-pstyle0">versus a FULL condo and maybe the neighbour&rsquo;s garage in Beverley Hills</p>
+		</div>
+		<div id="g-ai0-21" class="g-Layer_1 g-aiAbs" style="top:85.2058%;left:49.6563%;margin-left:-28.1875%;width:56.375%;">
+			<p class="g-pstyle0">or if you are really fancy ... </p>
+		</div>
+		<div id="g-ai0-22" class="g-Layer_1 g-aiAbs" style="top:93.0205%;left:25.1486%;margin-left:-19.25%;width:38.5%;">
+			<p class="g-pstyle0">1/10 of a Bugatti Chiron</p>
+		</div>
+		<div id="g-ai0-23" class="g-Layer_1 g-aiAbs" style="top:93.0205%;left:72.4611%;margin-left:-20.6875%;width:41.375%;">
+			<p class="g-pstyle0">versus a full Bugatti Chiron, one out of only 500 in the world</p>
+		</div>
+	</div>
+
+	<!-- Artboard: Mobile -->
+	<div id="g-Priceflation-Mobile" class="g-artboard" style="max-width: 600px;max-height: 3772px" data-aspect-ratio="0.159" data-min-width="0" data-max-width="799">
+<div style="padding: 0 0 628.625% 0;"></div>
+		<img id="g-Priceflation-Mobile-img" class="g-Priceflation-Mobile-img g-aiImg" alt="" src="Priceflation-Mobile.jpg"/>
+		<div id="g-ai1-1" class="g-Layer_1 g-aiAbs" style="top:1.7764%;left:71.8179%;margin-left:-16.4167%;width:32.8333%;">
+			<p class="g-pstyle0">Proposed gold card </p>
+		</div>
+		<div id="g-ai1-2" class="g-Layer_1 g-aiAbs" style="top:1.7764%;left:33.307%;margin-left:-12.75%;width:25.5%;">
+			<p class="g-pstyle0">Green card</p>
+		</div>
+		<div id="g-ai1-3" class="g-Layer_1 g-aiAbs" style="top:7.0259%;left:33.2975%;margin-left:-12.75%;width:25.5%;">
+			<p class="g-pstyle0">Price in 2017 </p>
+		</div>
+		<div id="g-ai1-4" class="g-Layer_1 g-aiAbs" style="top:7.0259%;left:61.0436%;width:25.5%;">
+			<p class="g-pstyle1">Price in 2025 </p>
+		</div>
+		<div id="g-ai1-5" class="g-Layer_1 g-aiAbs" style="top:8.5637%;left:33.2975%;margin-left:-12.75%;width:25.5%;">
+			<p class="g-pstyle0">$500,000</p>
+		</div>
+		<div id="g-ai1-6" class="g-Layer_1 g-aiAbs" style="top:8.5637%;left:71.7792%;margin-left:-12.75%;width:25.5%;">
+			<p class="g-pstyle0">$5 million</p>
+		</div>
+		<div id="g-ai1-7" class="g-Layer_1 g-aiAbs" style="top:11.4801%;left:53.8481%;margin-left:-27.3333%;width:54.6667%;">
+			<p class="g-pstyle0">what you can with that money everyday for a year in America? </p>
+		</div>
+		<div id="g-ai1-8" class="g-Layer_1 g-aiAbs" style="top:14.6881%;left:53.8481%;margin-left:-27.3333%;width:54.6667%;">
+			<p class="g-pstyle0">that&rsquo;s 365 days of</p>
+		</div>
+		<div id="g-ai1-9" class="g-Layer_1 g-aiAbs" style="top:23.3313%;left:70.7562%;margin-left:-11.8333%;width:23.6667%;">
+			<p class="g-pstyle0">39,160 eggs </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai1-10" class="g-Layer_1 g-aiAbs" style="top:23.3844%;left:31.7617%;margin-left:-11.8333%;width:23.6667%;">
+			<p class="g-pstyle0">11,182 eggs </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai1-11" class="g-Layer_1 g-aiAbs" style="top:33.0086%;left:29.2171%;margin-left:-11.8333%;width:23.6667%;">
+			<p class="g-pstyle0">392 packages of cookies </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai1-12" class="g-Layer_1 g-aiAbs" style="top:33.0086%;left:68.2341%;margin-left:-11.8333%;width:23.6667%;">
+			<p class="g-pstyle0">2,871 packages of cookies </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai1-13" class="g-Layer_1 g-aiAbs" style="top:43.6402%;left:30.4552%;margin-left:-15%;width:30%;">
+			<p class="g-pstyle0">258 McDonald&rsquo;s</p>
+			<p class="g-pstyle0">BigMacs </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai1-14" class="g-Layer_1 g-aiAbs" style="top:43.6402%;left:69.4419%;margin-left:-14.9167%;width:29.8333%;">
+			<p class="g-pstyle0">2365 McDonald&rsquo;s</p>
+			<p class="g-pstyle0">BigMacs </p>
+			<p class="g-pstyle0">a day  </p>
+		</div>
+		<div id="g-ai1-15" class="g-Layer_1 g-aiAbs" style="top:48.386%;left:50.4553%;margin-left:-27.3333%;width:54.6667%;">
+			<p class="g-pstyle0">How about luxury goods...?</p>
+		</div>
+		<div id="g-ai1-16" class="g-Layer_1 g-aiAbs" style="top:50.7192%;left:52.3637%;margin-left:-27.3333%;width:54.6667%;">
+			<p class="g-pstyle0">what you can with that amount in a year in America? </p>
+		</div>
+		<div id="g-ai1-17" class="g-Layer_1 g-aiAbs" style="top:59.3359%;left:28.8362%;margin-left:-13.5833%;width:27.1667%;">
+			<p class="g-pstyle0">53  Hermes Birkin bags</p>
+		</div>
+		<div id="g-ai1-18" class="g-Layer_1 g-aiAbs" style="top:59.3624%;left:70.0327%;margin-left:-15.0833%;width:30.1667%;">
+			<p class="g-pstyle0">versus 413 Hermes Birkin bags  </p>
+		</div>
+		<div id="g-ai1-19" class="g-Layer_1 g-aiAbs" style="top:68.0586%;left:30.1982%;margin-left:-16.3333%;width:32.6667%;">
+			<p class="g-pstyle0">One third of a condo in Beverley Hills</p>
+		</div>
+		<div id="g-ai1-20" class="g-Layer_1 g-aiAbs" style="top:68.0586%;left:70.2759%;margin-left:-17.5%;width:35%;">
+			<p class="g-pstyle0">versus a FULL condo and maybe the neighbour&rsquo;s garage in Beverley Hills</p>
+		</div>
+		<div id="g-ai1-21" class="g-Layer_1 g-aiAbs" style="top:72.937%;left:50.988%;margin-left:-23.9167%;width:47.8333%;">
+			<p class="g-pstyle0">or if you are really fancy ... </p>
+		</div>
+		<div id="g-ai1-22" class="g-Layer_1 g-aiAbs" style="top:79.5652%;left:30.1982%;margin-left:-16.3333%;width:32.6667%;">
+			<p class="g-pstyle0">One tenth of a Bugatti Chiron</p>
+		</div>
+		<div id="g-ai1-23" class="g-Layer_1 g-aiAbs" style="top:79.5652%;left:70.2759%;margin-left:-17.5%;width:35%;">
+			<p class="g-pstyle0">versus a full Bugatti Chiron, one out of only 500 made in the world</p>
+		</div>
+	</div>
+
+</div>
+
+<!-- End ai2html - 2025-03-05 05:59 -->
+
+</div>
+
+    <div class="content">
+      <p> Those were the goods that could be purchased with $5 million, how about retirement? How long can you retire for with $5 million?</p>
+      <iframe title="How many years of retirement can you get with $5 million? " aria-label="Table" id="datawrapper-chart-yRbO1" src="https://datawrapper.dwcdn.net/yRbO1/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="1729" data-external="1"></iframe><script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(a){if(void 0!==a.data["datawrapper-height"]){var e=document.querySelectorAll("iframe");for(var t in a.data["datawrapper-height"])for(var r=0;r<e.length;r++)if(e[r].contentWindow===a.source){var i=a.data["datawrapper-height"][t]+"px";e[r].style.height=i}}}))}();
+      </script>
+    </div>
+
+    <div class="content"><iframe title="How many lifetimes of retirement could you experience with $5 million?  " aria-label="Map" id="datawrapper-chart-qlltY" src="https://datawrapper.dwcdn.net/qlltY/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="513" data-external="1"></iframe><script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(a){if(void 0!==a.data["datawrapper-height"]){var e=document.querySelectorAll("iframe");for(var t in a.data["datawrapper-height"])for(var r=0;r<e.length;r++)if(e[r].contentWindow===a.source){var i=a.data["datawrapper-height"][t]+"px";e[r].style.height=i}}}))}();
+    </script> </div>
+
+    <div class ='content'>
+      <iframe title="As of Feb. 12, 2025, there are 547 approved regional centers" aria-label="Map" id="datawrapper-chart-K3zc7" src="https://datawrapper.dwcdn.net/K3zc7/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="514" data-external="1"></iframe><script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(a){if(void 0!==a.data["datawrapper-height"]){var e=document.querySelectorAll("iframe");for(var t in a.data["datawrapper-height"])for(var r=0;r<e.length;r++)if(e[r].contentWindow===a.source){var i=a.data["datawrapper-height"][t]+"px";e[r].style.height=i}}}))}();
+    </script>
+    </div>
+
+    <div class="content"> 
+      <iframe title="Pre-RIA I-526 Cases" aria-label="Split Bars" id="datawrapper-chart-pqXoU" src="https://datawrapper.dwcdn.net/pqXoU/1/" scrolling="no" frameborder="0" style="width: 0; min-width: 100% !important; border: none;" height="378" data-external="1"></iframe><script type="text/javascript">!function(){"use strict";window.addEventListener("message",(function(a){if(void 0!==a.data["datawrapper-height"]){var e=document.querySelectorAll("iframe");for(var t in a.data["datawrapper-height"])for(var r=0;r<e.length;r++)if(e[r].contentWindow===a.source){var i=a.data["datawrapper-height"][t]+"px";e[r].style.height=i}}}))}();
+      </script>
+    </div>
+    </div>
+    <div class="footer">
+      <div class="content">
+        <p> The end</p>
+        <p> Data as of February 24th, 2025. This is an ongoing legal case.</p>
+        <p>All analysis can be found at my <a href="https://github.com/chilinhhovo/bank_heist">Github repo</a></p>
+  </div>
+  <script>
+    /*************
+    
+    This is the JavaScript that makes the scrolly work 
+    
+    *************/
+
+    /* 
+    This part attaches a scroll to the element with id="scrolly-images"    
+    */
+    (() => {
+      const scroller = scrollama()
+
+      scroller
+        .setup({
+          parent: document.querySelector("#scrolly-images"),
+          step: ".step",
+          offset: 0.6,
+        })
+        .onStepEnter(function ({ element, index, direction }) {
+          const event = new CustomEvent("stepin", { detail: { direction: direction } })
+          element.dispatchEvent(event)
+        })
+        .onStepExit(function ({ element, index, direction }) {
+          const event = new CustomEvent("stepout", { detail: { direction: direction } })
+          if (direction === "up" && element.previousElementSibling) {
+            const event = new CustomEvent("stepin", { detail: { direction: direction } })
+            element.previousElementSibling.dispatchEvent(event)
+          }
+        })
+
+      window.addEventListener("resize", scroller.resize)
+    })()
+
+    /*
+    This part sets up your actions. In this case, it's changing the image in the scrolly container.
+    */
+    d3.select("#step1").on('stepin', (e) => {
+      d3.select(e.target.closest(".scrolly-container")).select(".sticky-thing img").attr("src", "content/map/map2.png")
+    })
+
+    d3.select("#step2").on('stepin', (e) => {
+      d3.select(e.target.closest(".scrolly-container")).select(".sticky-thing img").attr("src", "content/map/map3.png")
+    })
+
+    d3.select("#step3").on('stepin', (e) => {
+      d3.select(e.target.closest(".scrolly-container")).select(".sticky-thing img").attr("src", "content/map/map4.png")
+    })
+
+    d3.select("#step4").on('stepin', (e) => {
+      d3.select(e.target.closest(".scrolly-container")).select(".sticky-thing img").attr("src", "content/map/map5.png")
+    })
+
+    d3.select("#step5").on('stepin', (e) => {
+      d3.select(e.target.closest(".scrolly-container")).select(".sticky-thing img").attr("src", "content/map/map6.png")
+    })
+  </script>
+  <script>
+    /*
+    Different videos need different things - does the reader need to see
+    the entire screen of the video, or you want to make sure it covers the
+    entire window?
+
+    You can experiment with yours by removing the // from the full and
+    cover options below to see how it looks with your videos. 
+   
+    You can see parameters at 
+    https://github.com/dkaoster/scrolly-video?tab=readme-ov-file#-options--attributes
+
+    You might also need to adjust object-fit being 'cover' vs 'contain' in the CSS below
+
+    Be sure to check mobile!!
+    */ås
+    new ScrollyVideo({
+      scrollyVideoContainer: document.querySelector("#scrolly-video .sticky-thing"),
+      src: "video/hanyu_compressed.mp4",
+      full: true,
+      cover: true
+    });
+  </script>
+
+  
+  <style>
+    .step {
+      height: 100vh;
+      margin-bottom: 0;
+    }
+
+    .sticky-thing > canvas {
+      object-fit: cover;
+    } 
+  </style>
+
+</body>
+
+</html>
